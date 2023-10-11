@@ -1,4 +1,4 @@
-// use web_sys::console::log_1;
+use web_sys::console::log_1;
 // log_1(&format!("{}", self.objects.len()).into());
 use std::cell::RefCell;
 use crate::utils::uuid;
@@ -37,6 +37,10 @@ pub struct World {
     characters: Vec<RefCell<Box<dyn Character>>>,
     pub is_completed: bool,
     pub level_number: Option<usize>,
+
+    ////////
+    pub history_commands: Vec<(u64, u64)>,
+    ////////
 }
 
 impl World {
@@ -56,6 +60,10 @@ impl World {
             characters: new_characters,
             is_completed: false,
             level_number: None,
+
+            ////////
+            history_commands: Vec::new(),
+            ////////
         }
     }
 
@@ -168,9 +176,13 @@ impl World {
         if self.player().borrow().status_manager().status == Status::LevelComplete {
             self.is_completed = true;
         }
+
+        /////////////
+        log_1(&format!("{:?}", self.history_commands).into());
+        /////////////
     }
 
-    pub fn handle_direction_event(&mut self, key: &str) {
+    pub fn handle_direction_event(&mut self, key: &str, timestamp: f64) {
         let direction = match key {
             ARROW_UP => Some(Direction::Up),
             ARROW_DOWN => Some(Direction::Down),
@@ -178,19 +190,35 @@ impl World {
             ARROW_RIGHT => Some(Direction::Right),
             _ => None
         };
-        self.handle_player_movement(direction);
+        self.handle_player_movement(direction, timestamp);
     }
 
-    pub fn handle_player_movement(&mut self, direction: Option<Direction>) {
+    pub fn handle_player_movement(&mut self, direction: Option<Direction>, timestamp: f64) {
         if let Some(dir) = direction {
+            /////////
+            self.history_commands.push(
+                (timestamp as u64, match dir {
+                    Direction::Up => 0,
+                    Direction::Down => 1,
+                    Direction::Left => 2,
+                    Direction::Right => 3,
+                })
+            );
+            /////////
+
             let mut player = self.player().borrow_mut();
             if player.status_manager().status == Status::Idle {
+                log_1(&format!("{}", "wwwwww").into());
                 player.walk(dir, &self);
             }
         }
     }
 
-    pub fn handle_action_event(&mut self, key: &str) {
+    pub fn handle_action_event(&mut self, key: &'static str, timestamp: f64) {
+        /////////
+        self.history_commands.push((timestamp as u64, 4));
+        /////////
+
         let mut player = self.player().borrow_mut();
         match key {
             ACTION_KEY => player.rotate_item(self),
@@ -213,5 +241,9 @@ impl World {
         self.set_characters(vec![player]);
         self.is_completed = false;
         self.level_number = Some(level);
+
+        /////////
+        self.history_commands.clear();
+        /////////
     }
 }

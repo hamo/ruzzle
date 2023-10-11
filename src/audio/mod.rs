@@ -1,5 +1,7 @@
 mod web_audio_player;
+mod dummy_audio_player;
 pub use self::web_audio_player::WebAudioPlayer;
+pub use self::dummy_audio_player::DummyAudioPlayer;
 
 #[derive(PartialEq, Copy, Clone, Eq, Hash)]
 pub enum BGM {

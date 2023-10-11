@@ -50,8 +50,8 @@ impl Scene for GameScene {
             }
             self.set_next_scene_type(SceneType::LevelSelection);
         } else {
-            self.check_direction_event(controller, world);
-            self.check_action_event(controller, world);
+            self.check_direction_event(controller, world, now);
+            self.check_action_event(controller, world, now);
             world.update(now, audio);
         }
     }
@@ -127,7 +127,7 @@ impl GameScene {
             back_btn_asset,
         }
     }
-    fn check_direction_event(&mut self, controller: &mut Controller, world: &mut World) {
+    fn check_direction_event(&mut self, controller: &mut Controller, world: &mut World, now: f64) {
         // Check for a keyboard event that would cause player movement first
         let key_map = &controller.key_map;
         let mut direction_key = None;
@@ -143,7 +143,7 @@ impl GameScene {
             }
         }
         if let Some(direction_key) = direction_key {
-            world.handle_direction_event(direction_key);
+            world.handle_direction_event(direction_key, now);
             return;
         }
 
@@ -152,14 +152,14 @@ impl GameScene {
             let mouse_position = self.get_mouse_position(controller.mouse_x, controller.mouse_y);
             let player_position = world.player().borrow().status_manager().position;
             let target_direction = self.get_relative_mouse_direction(&mouse_position, &player_position);
-            world.handle_player_movement(target_direction);
+            world.handle_player_movement(target_direction, now);
         }
     }
-    fn check_action_event(&mut self, controller: &mut Controller, world: &mut World) {
+    fn check_action_event(&mut self, controller: &mut Controller, world: &mut World, now: f64) {
         if let Some(value) = controller.key_map.get(ACTION_KEY) {
             if let Some(timestamp) = value {
                 if *timestamp != self.action_timestamp {
-                    world.handle_action_event(ACTION_KEY);
+                    world.handle_action_event(ACTION_KEY, now);
                 }
                 self.action_timestamp = *timestamp;
             }

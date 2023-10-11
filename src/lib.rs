@@ -4,6 +4,7 @@ extern crate web_sys;
 extern crate js_sys;
 #[macro_use]
 extern crate serde_derive;
+extern crate zkwasm_rust_sdk;
 
 mod utils;
 mod web_client;
@@ -11,6 +12,10 @@ mod renderer;
 mod audio;
 mod controller;
 pub mod game;
+
+///////
+pub mod zkmain;
+///////
 
 use cfg_if::cfg_if;
 use wasm_bindgen::prelude::*;
