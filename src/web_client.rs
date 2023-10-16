@@ -120,4 +120,21 @@ impl WebClient {
             self.controller.key_map.insert(key, None);
         }
     }
+
+    pub fn get_verify_data(&mut self) -> Option<Vec<u64>> {
+        if self.world.level_number == None {
+            return None
+        }
+
+        let mut data: Vec<u64> = Vec::new();
+        data.push(self.world.level_number.unwrap() as u64);
+        data.push(self.world.history_commands.len() as u64);
+
+        for i in &self.world.history_commands {
+            data.push(i.0);
+            data.push(i.1);
+        }
+
+        Some(data)
+    }
 }
