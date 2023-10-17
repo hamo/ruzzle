@@ -3,7 +3,9 @@ use game::constants::{ACTION_KEY};
 use game::{Direction, Status};
 
 #[cfg(feature = "zkwasm")]
-use zkwasm_rust_sdk::{require, wasm_input};
+extern crate zkwasm_rust_sdk;
+#[cfg(feature = "zkwasm")]
+use self::zkwasm_rust_sdk::{require, wasm_input};
 
 use crate::game::World;
 use audio::{AudioPlayer, DummyAudioPlayer};
