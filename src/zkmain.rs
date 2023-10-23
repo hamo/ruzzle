@@ -2,9 +2,7 @@ use wasm_bindgen::prelude::*;
 use game::constants::{ACTION_KEY};
 use game::{Direction, Status};
 
-#[cfg(feature = "zkwasm")]
 extern crate zkwasm_rust_sdk;
-#[cfg(feature = "zkwasm")]
 use self::zkwasm_rust_sdk::{require, wasm_input};
 
 use crate::game::World;
@@ -13,7 +11,6 @@ use audio::{AudioPlayer, DummyAudioPlayer};
 // use web_sys::console::log_1;
 //log_1(&format!("{:?}", replay_commands).into());
 
-#[cfg(feature = "zkwasm")]
 #[wasm_bindgen]
 pub unsafe fn zkmain() -> u64 {
     //// u64: level_number
