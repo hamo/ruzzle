@@ -1,4 +1,4 @@
-use web_sys::console::log_1;
+// use web_sys::console::log_1;
 // log_1(&format!("{}", self.objects.len()).into());
 use std::cell::RefCell;
 use crate::utils::uuid;
@@ -178,7 +178,7 @@ impl World {
         }
 
         /////////////
-        log_1(&format!("{:?}", self.history_commands).into());
+        // log_1(&format!("{:?}", self.history_commands).into());
         /////////////
     }
 
@@ -208,7 +208,6 @@ impl World {
 
             let mut player = self.player().borrow_mut();
             if player.status_manager().status == Status::Idle {
-                log_1(&format!("{}", "wwwwww").into());
                 player.walk(dir, &self);
             }
         }
